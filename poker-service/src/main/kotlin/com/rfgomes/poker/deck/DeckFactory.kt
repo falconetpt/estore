@@ -26,9 +26,9 @@ class DeckFactory {
         val cardValues = CardValue.values()
         val listCards = ArrayList<Card>()
 
-        cardSuits.forEach { cardSuit ->
+        cardSuits.forEach { suit ->
             cardValues.forEach {
-                cardValue -> listCards.add(Card(cardValue, cardSuit))
+                value -> listCards.add(Card(value, suit))
             }
         }
 
