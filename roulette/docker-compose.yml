@@ -1,9 +1,15 @@
 version: '3'
 services:
-  roulette:
-    build: ./
-    ports:
-      - "8080:8080"
+#  roulette:
+#    build: ./
+#    restart: on-failure
+#    environment:
+#      - CASSANDRA_HOST=cassandra
+#    depends_on:
+#      - cassandra
+#    ports:
+#      - "8080:8080"
+
   cassandra:
     image: cassandra:latest
     container_name: cassandra
