@@ -13,7 +13,8 @@ enum class BetType(val bettingAction: BettingAction) {
     SIX_LINE(SixLine()),
     CORNER(Corner()),
     TRIO(Trio()),
-    BASKET(Basket())
+    BASKET(Basket()),
+    RED(Red())
 }
 
 

@@ -1,6 +1,8 @@
 package com.rfgomes.roulette.bet.action
 
 import com.rfgomes.roulette.bet.BetInfo
+import com.rfgomes.roulette.table.Color
+import com.rfgomes.roulette.table.Number
 import java.util.function.BiPredicate
 import java.util.function.Predicate
 import kotlin.math.abs
@@ -114,9 +116,67 @@ class Trio : BettingAction {
  * In American Roulette, it includes the double zero.
  */
 class Basket : BettingAction {
-    private val predicate = Predicate<Int> { (0..3).contains(it) }
+    private val predicate = Predicate<Number> { (0..3).contains(it.value) }
 
     override fun evaluate(bet: BetInfo): Boolean {
-        return bet.list.asSequence().any { predicate.test(it.value) }
+        return bet.isWinner()
+    }
+}
+
+/**
+ * Bet on the colour Red.
+ */
+class Red : BettingAction {
+    val notRedColor = Predicate<Number> { it.color != Color.Red }
+    override fun evaluate(bet: BetInfo): Boolean {
+        if (bet.list.any(notRedColor::test)) {
+            return false
+        }
+
+        return bet.isWinner()
+    }
+}
+
+/**
+ * Bet on the colour Black.
+ */
+class Black : BettingAction {
+    val notBlackColor = Predicate<Number> { it.color != Color.Black }
+    override fun evaluate(bet: BetInfo): Boolean {
+        if (bet.list.any(notBlackColor::test)) {
+            return false
+        }
+
+        return bet.isWinner()
+    }
+}
+
+/**
+ * Bet on Odd Numbers
+ */
+class Odd : BettingAction {
+    val isNotOddNumber = Predicate<Number> { it.value % 2 == 0 }
+
+    override fun evaluate(bet: BetInfo): Boolean {
+        if (bet.list.any(isNotOddNumber::test)) {
+            return false
+        }
+
+        return bet.isWinner()
+    }
+}
+
+/**
+ * Bet on Even Numbers
+ */
+class Even : BettingAction {
+    val isNotEvenNumber = Predicate<Number> { it.value % 2 != 0 }
+
+    override fun evaluate(bet: BetInfo): Boolean {
+        if (bet.list.any(isNotEvenNumber::test)) {
+            return false
+        }
+
+        return bet.isWinner()
     }
 }
