@@ -20,6 +20,7 @@ class Straight : BettingAction {
     }
 }
 
+
 /**
  * A bet on two numbers which are adjacent on the table.
  * Made by placing the chip on the shared line of the two numbers’ squares.
@@ -37,10 +38,10 @@ class Split : BettingAction {
         val firstBet = bet.list[0].value
         val secondBet = bet.list[1].value
 
-        return columnBet.test(firstBet, secondBet)
-                .or(lineBet.test(firstBet, secondBet)) && bet.isWinner()
+        return columnBet.or(lineBet).test(firstBet, secondBet) && bet.isWinner()
     }
 }
+
 
 /**
  * A bet on three consecutive numbers located on the same line.
@@ -62,6 +63,7 @@ class Street : BettingAction {
                 && bet.isWinner()
     }
 }
+
 
 /**
  * A bet on two adjacent lines.
@@ -111,6 +113,7 @@ class Trio : BettingAction {
     }
 }
 
+
 /**
  * Bet on 0, 1, 2 and 3 with a chip on the corner shared by the zero box and the first line.
  * In American Roulette, it includes the double zero.
@@ -119,7 +122,7 @@ class Basket : BettingAction {
     private val predicate = Predicate<Number> { (0..3).contains(it.value) }
 
     override fun evaluate(bet: BetInfo): Boolean {
-        return bet.isWinner()
+        return bet.list.any(predicate::test) && bet.isWinner()
     }
 }
 
@@ -127,7 +130,7 @@ class Basket : BettingAction {
  * Bet on the colour Red.
  */
 class Red : BettingAction {
-    val notRedColor = Predicate<Number> { it.color != Color.Red }
+    private val notRedColor = Predicate<Number> { it.color != Color.Red }
     override fun evaluate(bet: BetInfo): Boolean {
         if (bet.list.any(notRedColor::test)) {
             return false
@@ -141,7 +144,7 @@ class Red : BettingAction {
  * Bet on the colour Black.
  */
 class Black : BettingAction {
-    val notBlackColor = Predicate<Number> { it.color != Color.Black }
+    private val notBlackColor = Predicate<Number> { it.color != Color.Black }
     override fun evaluate(bet: BetInfo): Boolean {
         if (bet.list.any(notBlackColor::test)) {
             return false
@@ -155,7 +158,7 @@ class Black : BettingAction {
  * Bet on Odd Numbers
  */
 class Odd : BettingAction {
-    val isNotOddNumber = Predicate<Number> { it.value % 2 == 0 }
+    private val isNotOddNumber = Predicate<Number> { it.value % 2 == 0 }
 
     override fun evaluate(bet: BetInfo): Boolean {
         if (bet.list.any(isNotOddNumber::test)) {
@@ -170,7 +173,7 @@ class Odd : BettingAction {
  * Bet on Even Numbers
  */
 class Even : BettingAction {
-    val isNotEvenNumber = Predicate<Number> { it.value % 2 != 0 }
+    private val isNotEvenNumber = Predicate<Number> { it.value % 2 != 0 }
 
     override fun evaluate(bet: BetInfo): Boolean {
         if (bet.list.any(isNotEvenNumber::test)) {
